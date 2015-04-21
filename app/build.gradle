@@ -81,4 +81,5 @@ dependencies {
     compile 'net.danlew:android.joda:2.7.2'
     compile 'com.android.support:support-v4:22.0.0'
     compile 'org.jsoup:jsoup:1.8.2'
+    compile 'org.unbescape:unbescape:1.1.0.RELEASE'
 }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import fi.reaktor.android.rx.app.RssReaderApplication;
@@ -24,7 +23,8 @@ public class FeedsActivity extends RssReaderBaseActivity implements ActionBar.On
         @Override
         public void onReceive(Context context, Intent intent) {
             ListView feedsList = (ListView) findViewById(R.id.feeds_list);
-            ((BaseAdapter) feedsList.getAdapter()).notifyDataSetChanged();
+            ((FeedsAdapter) feedsList.getAdapter()).notifyDataSetChanged();
+            Log.d(TAG, "FeedsActivity received new data for feeds list");
         }
     };
 

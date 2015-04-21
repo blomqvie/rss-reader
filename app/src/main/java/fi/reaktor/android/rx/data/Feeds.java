@@ -81,4 +81,8 @@ public class Feeds {
         }
         return null;
     }
+
+    public void remove(Feed feed) {
+        feeds.remove(feed);
+    }
 }

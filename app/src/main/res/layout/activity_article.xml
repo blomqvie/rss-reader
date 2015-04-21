@@ -22,14 +22,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView android:id="@+id/article_published"
-                android:text="Title"
-                android:textSize="12sp"
+                android:text="Published"
+                android:textSize="15sp"
                 android:textColor="#ababab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView android:id="@+id/article_text"
                 android:text="Body"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textColor="#212121"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"

@@ -4,7 +4,9 @@ import android.util.Log;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,8 +28,21 @@ public class PeriodicUpdates {
         fetchTimerTask = new TimerTask() {
             @Override
             public void run() {
-                Log.d(TAG, "Fetch timer at " + new Date());
-                String[] feedUrls = new String[]{
+                List<String> feedUrls = Arrays.asList(new String[] {
+                        "http://feeds.arstechnica.com/arstechnica/gadgets",
+                        "http://feeds.arstechnica.com/arstechnica/cars",
+                        "http://feeds.arstechnica.com/arstechnica/multiverse",
+                        "http://feeds.arstechnica.com/arstechnica/science",
+                        "http://feeds.arstechnica.com/arstechnica/gaming",
+                        "http://feeds.arstechnica.com/arstechnica/apple",
+                        "http://feeds.arstechnica.com/arstechnica/tech-policy",
+                        "http://feeds.arstechnica.com/arstechnica/security",
+                        "http://feeds.arstechnica.com/arstechnica/business",
+                        "http://feeds.arstechnica.com/arstechnica/technology-lab",
+                        "http://feeds.arstechnica.com/arstechnica/staff-blogs",
+                        "http://feeds.arstechnica.com/arstechnica/features"
+
+                        /*
                         "http://feeds.reuters.com/reuters/MostRead",
                         "http://feeds.reuters.com/Reuters/worldNews",
                         "http://feeds.reuters.com/reuters/technologyNews",
@@ -40,8 +55,10 @@ public class PeriodicUpdates {
                         "http://feeds.reuters.com/reuters/entertainment",
                         "http://feeds.reuters.com/reuters/environment",
                         "http://feeds.reuters.com/reuters/lifestyle"
-                };
+                        */
+                });
 
+                // add or update new feeds
                 for (String url : feedUrls) {
                     Log.d(TAG, "Fetching " + url);
                     Feed feed = fetchRssFeed(url);
@@ -55,6 +72,18 @@ public class PeriodicUpdates {
                         Log.w(TAG, "Couldn't parse Feed from " + url);
                     }
                 }
+
+                // remove old feeds
+                List<Feed> feedsToPurge = new ArrayList<>();
+                for (Feed feed : feeds.getFeeds()) {
+                    if (feedUrls.contains(feed.getGuid())) {
+                        feedsToPurge.add(feed);
+                    }
+                }
+                for (Feed feed : feedsToPurge) {
+                    feeds.remove(feed);
+                }
+
                 feedUpdatesListener.feedsUpdated();
             }
         };
@@ -105,9 +134,6 @@ public class PeriodicUpdates {
         article.setTitle(item.getTitle());
         article.setContent(item.getContent());
         article.setPublished(item.getPubDate());
-        if (item.getContent() == null || item.getContent().trim().length() == 0) {
-            Log.e(TAG, "ITEM WITHOUT CONTENT: " + item.getTitle());
-        }
         return article;
     }
 }

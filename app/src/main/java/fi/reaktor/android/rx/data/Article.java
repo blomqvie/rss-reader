@@ -25,7 +25,8 @@ public class Article implements Serializable {
     }
 
     public void setContent(String content) {
-        String withoutHtmlTags = Jsoup.clean(Html.fromHtml(content).toString(), Whitelist.none());
+        String unescapedHtml = content.replaceAll("&nbsp;", " ");
+        String withoutHtmlTags = Jsoup.clean(Html.fromHtml(unescapedHtml).toString(), Whitelist.none());
         String withoutSpecialChars = withoutHtmlTags.replaceAll("[^ \ta-zA-Z0-9_\\.,\\-\\\\/\\\\:;\\*\\+!?\"'#€%&\\(\\)\\[\\]]", "");
         this.content = withoutSpecialChars.trim();
     }
