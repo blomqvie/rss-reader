@@ -37,26 +37,19 @@ public class Feed {
         this.published = published;
     }
 
-    public void addArticle(Article article) {
-        if (contains(article)) {
-            Log.d(Feed.class.getSimpleName(), "Updating an existing article: " + article.getGuid());
-            getArticleByGuid(article.getGuid()).update(article);
-        } else {
+    public void add(Article article) {
+        boolean found = false;
+        for (Article a : articles) {
+            if (a.getGuid().equals(article.getGuid())) {
+                found = true;
+                Log.d(Feed.class.getSimpleName(), "Updating an existing article: " + article.getGuid());
+                a.update(article);
+                break;
+            }
+        }
+        if (!found) {
             Log.d(Feed.class.getSimpleName(), "Adding a new article: " + article.getGuid());
             articles.add(article);
         }
-    }
-
-    private boolean contains(Article article) {
-        return getArticleByGuid(article.getGuid()) != null;
-    }
-
-    public Article getArticleByGuid(String guid) {
-        for (Article a : articles) {
-            if (a.getGuid().equals(guid)) {
-                return a;
-            }
-        }
-        return null;
     }
 }

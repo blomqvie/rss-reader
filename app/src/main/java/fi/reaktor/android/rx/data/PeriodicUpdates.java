@@ -75,7 +75,7 @@ public class PeriodicUpdates {
         feed.setPublished(new Date(rssFeed.getPublished()));
         ArrayList<RssItem> rssItems = rssFeed.getRssItems();
         for(RssItem rssItem : rssItems) {
-            feed.addArticle(convertRssItemIntoArticle(rssItem));
+            feed.add(convertRssItemIntoArticle(rssItem));
         }
         return feed;
     }
