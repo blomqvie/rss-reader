@@ -18,9 +18,11 @@ public class PeriodicUpdates {
     private Timer fetchTimer;
     private TimerTask fetchTimerTask;
     private Feeds feeds;
+    private FeedUpdatesListener feedUpdatesListener;
 
-    public PeriodicUpdates(Feeds feeds) {
+    public PeriodicUpdates(Feeds feeds, FeedUpdatesListener feedUpdatesListener) {
         this.feeds = feeds;
+        this.feedUpdatesListener = feedUpdatesListener;
         fetchTimerTask = new TimerTask() {
             @Override
             public void run() {
@@ -42,11 +44,13 @@ public class PeriodicUpdates {
                         if (feed.getGuid() == null) {
                             feed.setGuid(url);
                         }
+                        Log.d(TAG, "Adding parsed feed");
                         feeds.add(feed);
                     } else {
                         Log.w(TAG, "Couldn't parse Feed from " + url);
                     }
                 }
+                feedUpdatesListener.feedsUpdated();
             }
         };
     }

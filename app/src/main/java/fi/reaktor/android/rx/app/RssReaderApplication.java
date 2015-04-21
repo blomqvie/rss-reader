@@ -1,16 +1,16 @@
 package fi.reaktor.android.rx.app;
 
 import android.app.Application;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fi.reaktor.android.rx.data.Feed;
+import fi.reaktor.android.rx.data.FeedUpdatesListener;
 import fi.reaktor.android.rx.data.Feeds;
 import fi.reaktor.android.rx.data.PeriodicUpdates;
 
-public class RssReaderApplication extends Application {
+public class RssReaderApplication extends Application implements FeedUpdatesListener {
+
     private PeriodicUpdates periodicUpdates;
 
     private Feeds feeds = new Feeds();
@@ -19,7 +19,7 @@ public class RssReaderApplication extends Application {
     public void onCreate() {
         Log.d("APPLICATION", "onCreate()");
         super.onCreate();
-        periodicUpdates = new PeriodicUpdates(feeds);
+        periodicUpdates = new PeriodicUpdates(feeds, this);
         periodicUpdates.start();
     }
 
@@ -28,6 +28,13 @@ public class RssReaderApplication extends Application {
         Log.d("APPLICATION", "onTerminate()");
         periodicUpdates.stop();
         super.onTerminate();
+    }
+
+    @Override
+    public void feedsUpdated() {
+        Intent intent = new Intent("feeds-updated");
+        intent.putExtra("updated", true);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     public PeriodicUpdates getPeriodicUpdates() {
