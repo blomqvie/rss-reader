@@ -25,22 +25,18 @@ public class FeedActivity extends RssReaderBaseActivity {
         }
     };
 
+    private Feed feed;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getIntent().getCharSequenceExtra("feed-title"));
 
         String feedGuid = getIntent().getStringExtra("feed-guid");
-        Feeds feeds = ((RssReaderApplication) getApplication()).getFeeds();
-        Feed feed = null;
-        for (Feed f : feeds.getFeeds()) {
-            if (f.getGuid().equals(feedGuid)) {
-                feed = f;
-                break;
-            }
-        }
+        findFeed(feedGuid);
         if(feed == null) {
             finish();
         } else {
@@ -50,10 +46,24 @@ public class FeedActivity extends RssReaderBaseActivity {
         }
     }
 
+    private void findFeed(String feedGuid) {
+        Feeds feeds = ((RssReaderApplication) getApplication()).getFeeds();
+        for (Feed f : feeds.getFeeds()) {
+            if (f.getGuid().equals(feedGuid)) {
+                feed = f;
+                break;
+            }
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_feed, menu);
+        MenuItem favoriteItem = menu.findItem(R.id.action_favorite);
+        if(feed.isFavorite()) {
+            favoriteItem.setIcon(android.R.drawable.ic_delete);
+        }
         return true;
     }
 
@@ -66,7 +76,8 @@ public class FeedActivity extends RssReaderBaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_favorite) {
-            // TODO
+            feed.setFavorite(!feed.isFavorite());
+            item.setIcon(feed.isFavorite() ? android.R.drawable.ic_delete : android.R.drawable.ic_input_add);
             return true;
         }
         return super.onOptionsItemSelected(item);
