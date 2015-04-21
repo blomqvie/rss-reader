@@ -1,6 +1,7 @@
 package fi.reaktor.android.rx;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,10 @@ public class FeedsAdapter extends BaseAdapter {
         Holder h = (Holder) view.getTag();
         h.title.setText(getItem(i).getTitle());
         h.unread.setText("0");
+        view.setOnClickListener(view1 -> {
+            Intent i1 = new Intent(context, FeedActivity.class);
+            context.startActivity(i1);
+        });
         return view;
     }
 
