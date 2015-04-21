@@ -44,7 +44,7 @@ public class PeriodicUpdates {
                         if (feed.getGuid() == null) {
                             feed.setGuid(url);
                         }
-                        Log.d(TAG, "Adding parsed feed");
+                        Log.d(TAG, "Adding parsed feed with Guid " + feed.getGuid());
                         feeds.add(feed);
                     } else {
                         Log.w(TAG, "Couldn't parse Feed from " + url);
@@ -74,7 +74,9 @@ public class PeriodicUpdates {
     private Feed fetchRssFeed(String url) {
         try {
             RssFeed rssFeed = RssReader.read(new URL(url));
-            return convertRssFeedIntoFeed(rssFeed);
+            Feed feed = convertRssFeedIntoFeed(rssFeed);
+            feed.setGuid(url);
+            return feed;
         } catch (Exception e) {
             Log.e(TAG, "Exception fetching feed from " + url, e);
             return null;
@@ -83,7 +85,6 @@ public class PeriodicUpdates {
 
     private Feed convertRssFeedIntoFeed(RssFeed rssFeed) {
         Feed feed = new Feed();
-        feed.setGuid(rssFeed.getLink());
         feed.setTitle(rssFeed.getTitle());
         feed.setPublished(new Date(rssFeed.getPublished()));
         ArrayList<RssItem> rssItems = rssFeed.getRssItems();
