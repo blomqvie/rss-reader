@@ -33,7 +33,7 @@ android {
     def code = System.getenv().BUILD_NUMBER ?: versionProps['code']
     defaultConfig {
         applicationId 'fi.reaktor.android.rx'
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 22
         versionName versionProps['name']
     }
