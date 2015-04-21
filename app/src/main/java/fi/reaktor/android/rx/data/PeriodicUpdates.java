@@ -23,7 +23,15 @@ public class PeriodicUpdates {
             @Override
             public void run() {
                 Log.d(TAG, "Fetch timer at " + new Date());
-                String[] feedUrls = new String[] { "http://feeds.reuters.com/reuters/MostRead" };
+                String[] feedUrls = new String[] {
+                        "http://feeds.reuters.com/reuters/MostRead",
+                        "http://feeds.reuters.com/reuters/technologyNews",
+                        "http://feeds.reuters.com/reuters/sportsNews",
+                        "http://feeds.reuters.com/reuters/entertainment",
+                        "http://feeds.reuters.com/reuters/businessNews",
+                        "http://feeds.reuters.com/Reuters/PoliticsNews",
+                        "http://feeds.reuters.com/reuters/lifestyle"
+                };
                 for (String url : feedUrls) {
                     Log.d(TAG, "Fetching " + url);
                     Feed feed = fetchRssFeed(url);
@@ -50,23 +58,26 @@ public class PeriodicUpdates {
     {
         try
         {
-            URL feedUrl = new URL(url);
-            RssFeed rssFeed = RssReader.read(feedUrl);
-            Feed feed = new Feed();
-            feed.setGuid(url);
-            feed.setTitle(rssFeed.getTitle());
-            feed.setPublished(new Date(rssFeed.getPublished()));
-            ArrayList<RssItem> rssItems = rssFeed.getRssItems();
-            for(RssItem rssItem : rssItems) {
-                feed.addArticle(convertRssItemIntoArticle(rssItem));
-            }
-            return feed;
+            RssFeed rssFeed = RssReader.read(new URL(url));
+            return convertRssFeedIntoFeed(rssFeed);
         }
         catch (Exception e) {
             e.printStackTrace();
         } finally {
             return null;
         }
+    }
+
+    private Feed convertRssFeedIntoFeed(RssFeed rssFeed) {
+        Feed feed = new Feed();
+        feed.setGuid(rssFeed.getLink());
+        feed.setTitle(rssFeed.getTitle());
+        feed.setPublished(new Date(rssFeed.getPublished()));
+        ArrayList<RssItem> rssItems = rssFeed.getRssItems();
+        for(RssItem rssItem : rssItems) {
+            feed.addArticle(convertRssItemIntoArticle(rssItem));
+        }
+        return feed;
     }
 
     private Article convertRssItemIntoArticle(RssItem item) {

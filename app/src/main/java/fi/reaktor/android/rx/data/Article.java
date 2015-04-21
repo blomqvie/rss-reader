@@ -1,5 +1,7 @@
 package fi.reaktor.android.rx.data;
 
+import android.util.Log;
+
 import java.util.Date;
 
 public class Article {
@@ -38,5 +40,14 @@ public class Article {
 
     public String getGuid() {
         return guid;
+    }
+
+    public void update(Article article) {
+        if (!guid.equals(article.getGuid())) {
+            Log.w(Article.class.getSimpleName(), "Updating an article based on an article with different identity!");
+        }
+        setPublished(article.getPublished());
+        setTitle(article.getTitle());
+        setContent(article.getContent());
     }
 }
