@@ -29,11 +29,16 @@ public class PeriodicUpdates {
                 Log.d(TAG, "Fetch timer at " + new Date());
                 String[] feedUrls = new String[]{
                         "http://feeds.reuters.com/reuters/MostRead",
+                        "http://feeds.reuters.com/Reuters/worldNews",
                         "http://feeds.reuters.com/reuters/technologyNews",
+                        "http://feeds.reuters.com/reuters/scienceNews",
                         "http://feeds.reuters.com/reuters/sportsNews",
-                        "http://feeds.reuters.com/reuters/entertainment",
-                        "http://feeds.reuters.com/reuters/businessNews",
                         "http://feeds.reuters.com/Reuters/PoliticsNews",
+                        "http://feeds.reuters.com/reuters/businessNews",
+                        "http://feeds.reuters.com/news/wealth",
+                        "http://feeds.reuters.com/reuters/peopleNews",
+                        "http://feeds.reuters.com/reuters/entertainment",
+                        "http://feeds.reuters.com/reuters/environment",
                         "http://feeds.reuters.com/reuters/lifestyle"
                 };
 
