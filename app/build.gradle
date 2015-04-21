@@ -78,6 +78,4 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.rometools:rome:1.5.0'
-    compile 'com.rometools:rome-modules:1.5.0'
 }
