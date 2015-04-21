@@ -28,6 +28,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="fi.reaktor.android.rx.FeedsActivity" />
         </activity>
+        <activity
+            android:name=".ArticleActivity"
+            android:label="@string/title_activity_article"
+            android:parentActivityName=".FeedActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="fi.reaktor.android.rx.FeedActivity" />
+        </activity>
     </application>
 
 </manifest>
