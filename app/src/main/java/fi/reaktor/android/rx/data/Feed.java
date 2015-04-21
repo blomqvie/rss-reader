@@ -1,10 +1,11 @@
 package fi.reaktor.android.rx.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Feed {
+public class Feed implements Serializable {
 
     private String guid;
     private String title;

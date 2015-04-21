@@ -2,9 +2,10 @@ package fi.reaktor.android.rx.data;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Article {
+public class Article implements Serializable {
     private Date published;
     private String content;
     private String title;

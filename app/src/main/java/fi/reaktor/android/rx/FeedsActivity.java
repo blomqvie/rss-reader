@@ -1,6 +1,5 @@
 package fi.reaktor.android.rx;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,7 @@ import android.widget.ListView;
 import fi.reaktor.android.rx.app.RssReaderApplication;
 import fi.reaktor.android.rx.data.Feeds;
 
-public class FeedsActivity extends Activity {
+public class FeedsActivity extends RssReaderBaseActivity {
 
     private static final String TAG = FeedsActivity.class.getSimpleName();
 

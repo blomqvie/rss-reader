@@ -1,13 +1,10 @@
 package fi.reaktor.android.rx;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import fi.reaktor.android.rx.R;
-
-public class ArticleActivity extends Activity {
+public class ArticleActivity extends RssReaderBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

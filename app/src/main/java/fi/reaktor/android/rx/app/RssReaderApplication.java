@@ -12,13 +12,14 @@ import fi.reaktor.android.rx.data.PeriodicUpdates;
 public class RssReaderApplication extends Application implements FeedUpdatesListener {
 
     private PeriodicUpdates periodicUpdates;
-
-    private Feeds feeds = new Feeds();
+    private Feeds feeds;
 
     @Override
     public void onCreate() {
         Log.d("APPLICATION", "onCreate()");
         super.onCreate();
+        feeds = new Feeds();
+        feeds.load(this);
         periodicUpdates = new PeriodicUpdates(feeds, this);
         periodicUpdates.start();
     }
@@ -51,5 +52,9 @@ public class RssReaderApplication extends Application implements FeedUpdatesList
 
     public void setFeeds(Feeds feeds) {
         this.feeds = feeds;
+    }
+
+    public void persistDataIfModified() {
+        feeds.persist(this);
     }
 }
