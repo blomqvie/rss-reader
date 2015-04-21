@@ -1,7 +1,5 @@
 package fi.reaktor.android.rx.data;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +10,7 @@ public class Feed {
     private String title;
     private Date published;
     private List<Article> articles = new ArrayList<>();
+    private boolean favorite;
 
     public String getGuid() {
         return guid;
@@ -37,18 +36,28 @@ public class Feed {
         this.published = published;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public List<Article> getArticles() {
+        return articles;
+    }
+
     public void add(Article article) {
         boolean found = false;
         for (Article a : articles) {
             if (a.getGuid().equals(article.getGuid())) {
                 found = true;
-                Log.d(Feed.class.getSimpleName(), "Updating an existing article: " + article.getGuid());
                 a.update(article);
                 break;
             }
         }
         if (!found) {
-            Log.d(Feed.class.getSimpleName(), "Adding a new article: " + article.getGuid());
             articles.add(article);
         }
     }
@@ -56,6 +65,8 @@ public class Feed {
     public void update(Feed feed) {
         this.title = feed.title;
         this.published = feed.published;
-        this.articles = feed.articles;
+        for (Article newArticle : feed.getArticles()) {
+            add(newArticle);
+        }
     }
 }

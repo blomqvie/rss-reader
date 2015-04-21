@@ -9,6 +9,7 @@ public class Article {
     private String content;
     private String title;
     private String guid;
+    private boolean read;
 
     public void setPublished(Date published) {
         this.published = published;
@@ -40,6 +41,14 @@ public class Article {
 
     public String getGuid() {
         return guid;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public void update(Article article) {

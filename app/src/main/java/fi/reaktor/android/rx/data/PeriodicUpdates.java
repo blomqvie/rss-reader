@@ -5,7 +5,6 @@ import android.util.Log;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,6 +43,8 @@ public class PeriodicUpdates {
                             feed.setGuid(url);
                         }
                         feeds.add(feed);
+                    } else {
+                        Log.w(TAG, "Couldn't parse Feed from " + url);
                     }
                 }
             }
@@ -52,7 +53,7 @@ public class PeriodicUpdates {
 
     public void start() {
         fetchTimer = new Timer("fetchtimer");
-        fetchTimer.scheduleAtFixedRate(fetchTimerTask, 0, 5 * 60 * 1000);
+        fetchTimer.scheduleAtFixedRate(fetchTimerTask, 0, 30 /* 5 * 60 */ * 1000);
     }
 
     public void stop() {
@@ -71,8 +72,7 @@ public class PeriodicUpdates {
             RssFeed rssFeed = RssReader.read(new URL(url));
             return convertRssFeedIntoFeed(rssFeed);
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
+            Log.e(TAG, "Exception fetching feed from " + url, e);
             return null;
         }
     }
