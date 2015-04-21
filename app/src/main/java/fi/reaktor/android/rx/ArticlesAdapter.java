@@ -2,6 +2,7 @@ package fi.reaktor.android.rx;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,10 +54,19 @@ public class ArticlesAdapter extends BaseAdapter {
         String content = article.getContent();
         String teaserText = content != null ? (content.length() > 200 ? content.substring(0, 200) : content) : "No content available";
         h.teaser.setText(teaserText);
+        if(!article.isRead()) {
+            h.teaser.setTypeface(null, Typeface.BOLD);
+        } else {
+            h.teaser.setTypeface(null, Typeface.NORMAL);
+        }
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                article.setRead(true);
+                Holder clickedHolder = (Holder) view.getTag();
+                clickedHolder.teaser.setTypeface(null, Typeface.NORMAL);
+
                 Intent intent = new Intent(context, ArticleActivity.class);
                 intent.putExtra(ArticleActivity.EXTRA_ARTICLE_GUID, article.getGuid());
                 context.startActivity(intent);
