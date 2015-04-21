@@ -58,7 +58,7 @@ public class ArticlesAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ArticleActivity.class);
-                intent.putExtra("article-guid", article.getGuid());
+                intent.putExtra(ArticleActivity.EXTRA_ARTICLE_GUID, article.getGuid());
                 context.startActivity(intent);
             }
         });

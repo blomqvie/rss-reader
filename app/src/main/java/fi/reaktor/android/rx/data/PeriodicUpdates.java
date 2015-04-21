@@ -62,7 +62,7 @@ public class PeriodicUpdates {
 
     public void start() {
         fetchTimer = new Timer("fetchtimer");
-        fetchTimer.scheduleAtFixedRate(fetchTimerTask, 0, 30 /* 5 * 60 */ * 1000);
+        fetchTimer.scheduleAtFixedRate(fetchTimerTask, 0, 5 * 60 * 1000);
     }
 
     public void stop() {
@@ -105,6 +105,9 @@ public class PeriodicUpdates {
         article.setTitle(item.getTitle());
         article.setContent(item.getContent());
         article.setPublished(item.getPubDate());
+        if (item.getContent() == null || item.getContent().trim().length() == 0) {
+            Log.e(TAG, "ITEM WITHOUT CONTENT: " + item.getTitle());
+        }
         return article;
     }
 }

@@ -71,4 +71,14 @@ public class Feeds {
             return list;
         }
     }
+
+    public Article findArticle(String guid) {
+        for (Feed feed : feeds) {
+            Article article = feed.findArticle(guid);
+            if (article != null) {
+                return article;
+            }
+        }
+        return null;
+    }
 }

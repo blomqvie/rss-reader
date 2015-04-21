@@ -102,6 +102,10 @@ public class RssFeed implements Parcelable {
 		this.description = description;
 	}
 
+	public void setContent(String description) {
+		this.description = description;
+	}
+
 	public String getLanguage() {
 		return language;
 	}
@@ -119,6 +123,8 @@ public class RssFeed implements Parcelable {
 	public void setPublished(String published) {
 		this.published = published;
 	}
+
+	public void setLastBuildDate(String published) { this.published = published; }
 
 	public ArrayList<RssItem> getRssItems() {
 		return rssItems;

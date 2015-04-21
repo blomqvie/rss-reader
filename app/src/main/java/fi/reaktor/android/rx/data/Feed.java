@@ -50,6 +50,9 @@ public class Feed implements Serializable {
     }
 
     public void add(Article article) {
+        if (article.getContent() == null || article.getContent().length() == 0) {
+            throw new RuntimeException("WTF");
+        }
         boolean found = false;
         for (Article a : articles) {
             if (a.getGuid().equals(article.getGuid())) {
@@ -69,5 +72,14 @@ public class Feed implements Serializable {
         for (Article newArticle : feed.getArticles()) {
             add(newArticle);
         }
+    }
+
+    public Article findArticle(String guid) {
+        for (Article article : articles) {
+            if (article.getGuid().equals(guid)) {
+                return article;
+            }
+        }
+        return null;
     }
 }

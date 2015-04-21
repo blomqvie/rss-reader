@@ -1,6 +1,10 @@
 package fi.reaktor.android.rx.data;
 
+import android.text.Html;
 import android.util.Log;
+
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,7 +25,9 @@ public class Article implements Serializable {
     }
 
     public void setContent(String content) {
-        this.content = content;
+        String withoutHtmlTags = Jsoup.clean(Html.fromHtml(content).toString(), Whitelist.none());
+        String withoutSpecialChars = withoutHtmlTags.replaceAll("[^ \ta-zA-Z0-9_\\.,\\-\\\\/\\\\:;\\*\\+!?\"'#€%&\\(\\)\\[\\]]", "");
+        this.content = withoutSpecialChars.trim();
     }
 
     public String getContent() {

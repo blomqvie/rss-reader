@@ -129,12 +129,10 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 		}
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDescription(String content) {
+		if (this.content == null && content != null && !content.equals("null")) {
+			this.content = content;
+		}
 	}
 
 	public String getContent() {
@@ -142,7 +140,9 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 	}
 
 	public void setContent(String content) {
-		this.content = content;
+		if (this.content == null && content != null && !content.equals("null")) {
+			this.content = content;
+		}
 	}
 
 	@Override
