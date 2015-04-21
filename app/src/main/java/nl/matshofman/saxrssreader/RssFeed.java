@@ -114,6 +114,8 @@ public class RssFeed implements Parcelable {
 		return published;
 	}
 
+	public void setPubDate(String published) { this.published = published; }
+
 	public void setPublished(String published) {
 		this.published = published;
 	}

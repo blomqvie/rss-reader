@@ -5,7 +5,6 @@ import android.util.Log;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,8 +23,11 @@ public class PeriodicUpdates {
             @Override
             public void run() {
                 Log.d(TAG, "Fetch timer at " + new Date());
-                List<String> entries = fetchRssFeed("http://feeds.reuters.com/reuters/MostRead");
-                Log.d(TAG, "Fetched " + entries.size() + " entries");
+                String[] feedUrls = new String[] { "http://feeds.reuters.com/reuters/MostRead" };
+                for (String url : feedUrls) {
+                    Log.d(TAG, "Fetching " + url);
+                    Feed feed = fetchRssFeed(url);
+                }
             }
         };
     }
@@ -44,24 +46,35 @@ public class PeriodicUpdates {
         } catch (Exception e) {}
     }
 
-    private List<String> fetchRssFeed(String url)
+    private Feed fetchRssFeed(String url)
     {
-        List<String> titles = new ArrayList<>();
         try
         {
             URL feedUrl = new URL(url);
-            RssFeed feed = RssReader.read(feedUrl);
-            ArrayList<RssItem> rssItems = feed.getRssItems();
+            RssFeed rssFeed = RssReader.read(feedUrl);
+            Feed feed = new Feed();
+            feed.setGuid(url);
+            feed.setTitle(rssFeed.getTitle());
+            feed.setPublished(new Date(rssFeed.getPublished()));
+            ArrayList<RssItem> rssItems = rssFeed.getRssItems();
             for(RssItem rssItem : rssItems) {
-                Log.i("RSS Reader", rssItem.getTitle());
-                titles.add(rssItem.getTitle());
+                feed.addArticle(convertRssItemIntoArticle(rssItem));
             }
+            return feed;
         }
         catch (Exception e) {
             e.printStackTrace();
         } finally {
-            return titles;
+            return null;
         }
     }
 
+    private Article convertRssItemIntoArticle(RssItem item) {
+        Article article = new Article();
+        article.setGuid(item.getGuid());
+        article.setTitle(item.getTitle());
+        article.setContent(item.getContent());
+        article.setPublished(item.getPubDate());
+        return article;
+    }
 }
