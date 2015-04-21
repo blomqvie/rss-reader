@@ -55,6 +55,7 @@ public class FeedsAdapter extends BaseAdapter {
         view.setOnClickListener(view1 -> {
             Intent i1 = new Intent(context, FeedActivity.class);
             i1.putExtra("feed-guid", feed.getGuid());
+            i1.putExtra("feed-title", feed.getTitle());
             context.startActivity(i1);
         });
 

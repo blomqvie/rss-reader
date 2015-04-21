@@ -30,6 +30,7 @@ public class FeedActivity extends RssReaderBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(getIntent().getCharSequenceExtra("feed-title"));
 
         String feedGuid = getIntent().getStringExtra("feed-guid");
         Feeds feeds = ((RssReaderApplication) getApplication()).getFeeds();
