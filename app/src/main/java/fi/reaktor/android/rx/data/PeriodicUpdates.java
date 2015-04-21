@@ -5,6 +5,7 @@ import android.util.Log;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,13 +18,15 @@ public class PeriodicUpdates {
 
     private Timer fetchTimer;
     private TimerTask fetchTimerTask;
+    private Feeds feeds;
 
-    public PeriodicUpdates() {
+    public PeriodicUpdates(Feeds feeds) {
+        this.feeds = feeds;
         fetchTimerTask = new TimerTask() {
             @Override
             public void run() {
                 Log.d(TAG, "Fetch timer at " + new Date());
-                String[] feedUrls = new String[] {
+                String[] feedUrls = new String[]{
                         "http://feeds.reuters.com/reuters/MostRead",
                         "http://feeds.reuters.com/reuters/technologyNews",
                         "http://feeds.reuters.com/reuters/sportsNews",
@@ -32,9 +35,16 @@ public class PeriodicUpdates {
                         "http://feeds.reuters.com/Reuters/PoliticsNews",
                         "http://feeds.reuters.com/reuters/lifestyle"
                 };
+
                 for (String url : feedUrls) {
                     Log.d(TAG, "Fetching " + url);
                     Feed feed = fetchRssFeed(url);
+                    if (feed != null) {
+                        if (feed.getGuid() == null) {
+                            feed.setGuid(url);
+                        }
+                        feeds.add(feed);
+                    }
                 }
             }
         };
@@ -48,20 +58,19 @@ public class PeriodicUpdates {
     public void stop() {
         try {
             fetchTimerTask.cancel();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         try {
             fetchTimer.cancel();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
-    private Feed fetchRssFeed(String url)
-    {
-        try
-        {
+    private Feed fetchRssFeed(String url) {
+        try {
             RssFeed rssFeed = RssReader.read(new URL(url));
             return convertRssFeedIntoFeed(rssFeed);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             return null;
@@ -74,7 +83,7 @@ public class PeriodicUpdates {
         feed.setTitle(rssFeed.getTitle());
         feed.setPublished(new Date(rssFeed.getPublished()));
         ArrayList<RssItem> rssItems = rssFeed.getRssItems();
-        for(RssItem rssItem : rssItems) {
+        for (RssItem rssItem : rssItems) {
             feed.add(convertRssItemIntoArticle(rssItem));
         }
         return feed;

@@ -52,4 +52,10 @@ public class Feed {
             articles.add(article);
         }
     }
+
+    public void update(Feed feed) {
+        this.title = feed.title;
+        this.published = feed.published;
+        this.articles = feed.articles;
+    }
 }
