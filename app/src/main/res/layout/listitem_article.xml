@@ -7,14 +7,14 @@
     android:paddingTop="15dp"
     android:paddingBottom="10dp">
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Article title"
         android:id="@+id/article_title"
         android:textStyle="bold"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
