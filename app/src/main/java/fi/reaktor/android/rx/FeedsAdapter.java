@@ -38,6 +38,7 @@ public class FeedsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+
         if(view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.listitem_feed, null);
@@ -46,13 +47,17 @@ public class FeedsAdapter extends BaseAdapter {
             view.setTag(new Holder(title, unread));
         }
 
+        Feed feed = getItem(i);
+
         Holder h = (Holder) view.getTag();
-        h.title.setText(getItem(i).getTitle());
+        h.title.setText(feed.getTitle());
         h.unread.setText("0");
         view.setOnClickListener(view1 -> {
             Intent i1 = new Intent(context, FeedActivity.class);
+            i1.putExtra("feed-guid", feed.getGuid());
             context.startActivity(i1);
         });
+
         return view;
     }
 

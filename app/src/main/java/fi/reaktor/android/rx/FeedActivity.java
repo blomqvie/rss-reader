@@ -1,16 +1,52 @@
 package fi.reaktor.android.rx;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+
+import fi.reaktor.android.rx.app.RssReaderApplication;
+import fi.reaktor.android.rx.data.Feed;
+import fi.reaktor.android.rx.data.Feeds;
 
 public class FeedActivity extends RssReaderBaseActivity {
+
+    BroadcastReceiver feedUpdatesReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ListView articleList = (ListView) findViewById(R.id.article_list);
+            ((BaseAdapter) articleList.getAdapter()).notifyDataSetChanged();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        String feedGuid = getIntent().getStringExtra("feed-guid");
+        Feeds feeds = ((RssReaderApplication) getApplication()).getFeeds();
+        Feed feed = null;
+        for (Feed f : feeds.getFeeds()) {
+            if (f.getGuid().equals(feedGuid)) {
+                feed = f;
+                break;
+            }
+        }
+        if(feed == null) {
+            finish();
+        } else {
+            ListView articleList = (ListView) findViewById(R.id.article_list);
+            articleList.setAdapter(new ArticlesAdapter(feed, this));
+            LocalBroadcastManager.getInstance(this).registerReceiver(feedUpdatesReceiver, new IntentFilter("feeds-updated"));
+        }
     }
 
     @Override
@@ -32,7 +68,6 @@ public class FeedActivity extends RssReaderBaseActivity {
             // TODO
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

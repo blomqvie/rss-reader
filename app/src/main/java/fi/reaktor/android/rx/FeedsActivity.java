@@ -20,7 +20,6 @@ public class FeedsActivity extends RssReaderBaseActivity {
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Got feeds updated event!");
             ListView feedsList = (ListView) findViewById(R.id.feeds_list);
             ((BaseAdapter) feedsList.getAdapter()).notifyDataSetChanged();
         }
