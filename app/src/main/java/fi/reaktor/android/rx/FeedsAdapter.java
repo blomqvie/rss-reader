@@ -1,6 +1,7 @@
 package fi.reaktor.android.rx;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -37,10 +38,27 @@ public class FeedsAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if(view == null) {
-            view = new TextView(context);
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = layoutInflater.inflate(R.layout.listitem_feed, null);
+            TextView title = (TextView) view.findViewById(R.id.feed_title);
+            TextView unread = (TextView) view.findViewById(R.id.feed_unread);
+            view.setTag(new Holder(title, unread));
         }
-        TextView tw = (TextView) view;
-        tw.setText(getItem(i).getTitle());
-        return tw;
+
+        Holder h = (Holder) view.getTag();
+        h.title.setText(getItem(i).getTitle());
+        h.unread.setText("0");
+        return view;
     }
+
+    private static class Holder {
+        public final TextView title;
+        public final TextView unread;
+
+        public Holder(TextView title, TextView unread) {
+            this.title = title;
+            this.unread = unread;
+        }
+    }
+
 }
