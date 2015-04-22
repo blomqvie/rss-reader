@@ -41,6 +41,9 @@ public class RssReaderApplication extends Application implements FeedUpdatesList
     @Override
     public void feedsUpdated(List<Feed> feeds) {
         this.feeds = new Feeds(feeds);
+        // TODO 1: Implement this with RxJava Subject.
+        // Create a field of type Subject in to RssReaderApplication and use it to publish new values.
+        // Provide an API to subscribe to the Subject by exposing it as Observable.
         Intent intent = new Intent("feeds-updated");
         intent.putExtra("updated", true);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

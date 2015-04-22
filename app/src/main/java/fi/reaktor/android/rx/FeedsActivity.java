@@ -19,6 +19,7 @@ public class FeedsActivity extends RssReaderBaseActivity implements ActionBar.On
     private static final String TAG = FeedsActivity.class.getSimpleName();
     private static final String[] spinnerOptions = new String[]{"All", "Unread", "Favorites"};
 
+    // TODO 2: turn this into a RxJava Subscriber
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -41,6 +42,8 @@ public class FeedsActivity extends RssReaderBaseActivity implements ActionBar.On
 
         setAdapter();
 
+        // TODO 2: Instead of registering receiver in onCreate, subscribe to Observable exposed by RssReaderApplication.
+        // Note: This should be done in onResume to avoid race condition and UI updates when app is not visible
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("feeds-updated"));
 
         getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -49,6 +52,7 @@ public class FeedsActivity extends RssReaderBaseActivity implements ActionBar.On
 
     @Override
     protected void onDestroy() {
+        // TODO 2: Instead of unregister here, unsubscribe from Observable in onPause
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         super.onDestroy();
     }

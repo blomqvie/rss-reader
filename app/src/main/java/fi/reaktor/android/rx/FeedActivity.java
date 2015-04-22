@@ -19,11 +19,13 @@ import fi.reaktor.android.rx.data.Feeds;
 
 public class FeedActivity extends RssReaderBaseActivity {
 
+    // TODO 3: Replace this with RxJava Subscriber
     BroadcastReceiver feedUpdatesReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             ListView articleList = (ListView) findViewById(R.id.article_list);
             RssReaderApplication app = (RssReaderApplication) getApplication();
+            // TODO 3: you can also map the observable provided by RssReaderApplication
             Option<Feed> feed = app.getFeeds().getFeedSeq().find(f -> f.guid.equals(getFeedId()));
             articleList.setAdapter(new ArticlesAdapter(feed.getOrNull(), FeedActivity.this));
         }
@@ -66,6 +68,7 @@ public class FeedActivity extends RssReaderBaseActivity {
 
     @Override
     protected void onDestroy() {
+        // TODO 3: Change this to unsubscribe in onPause
         LocalBroadcastManager.getInstance(this).unregisterReceiver(feedUpdatesReceiver);
         super.onDestroy();
     }
@@ -75,10 +78,9 @@ public class FeedActivity extends RssReaderBaseActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_feed, menu);
         MenuItem favoriteItem = menu.findItem(R.id.action_favorite);
-        // TODO read user data
-//        if(feed.isFavorite()) {
-//            favoriteItem.setIcon(android.R.drawable.ic_delete);
-//        }
+        // if(feed.isFavorite()) {
+        //     favoriteItem.setIcon(android.R.drawable.ic_delete);
+        // }
         return true;
     }
 
@@ -91,9 +93,8 @@ public class FeedActivity extends RssReaderBaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_favorite) {
-            // TODO read user data
-//            feed.setFavorite(!feed.isFavorite());
-//            item.setIcon(feed.isFavorite() ? android.R.drawable.ic_delete : android.R.drawable.ic_input_add);
+        // feed.setFavorite(!feed.isFavorite());
+        // item.setIcon(feed.isFavorite() ? android.R.drawable.ic_delete : android.R.drawable.ic_input_add);
             return true;
         }
         return super.onOptionsItemSelected(item);
