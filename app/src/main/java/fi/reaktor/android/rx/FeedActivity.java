@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.googlecode.totallylazy.Option;
 
+import fi.reaktor.android.rx.app.ApplicationConstants;
 import fi.reaktor.android.rx.app.RssReaderApplication;
 import fi.reaktor.android.rx.data.Feed;
 import fi.reaktor.android.rx.data.Feeds;
@@ -39,7 +39,7 @@ public class FeedActivity extends RssReaderBaseActivity {
         setContentView(R.layout.activity_feed);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getIntent().getCharSequenceExtra("feed-title"));
+        getActionBar().setTitle(getIntent().getCharSequenceExtra(ApplicationConstants.FEED_TITLE));
 
         String feedGuid = getFeedId();
         findFeed(feedGuid);

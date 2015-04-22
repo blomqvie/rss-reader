@@ -9,21 +9,22 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import fi.reaktor.android.rx.app.ApplicationConstants;
 import fi.reaktor.android.rx.app.RssReaderApplication;
 import fi.reaktor.android.rx.data.Article;
 
 public class ArticleActivity extends RssReaderBaseActivity {
     private static final String TAG = ArticleActivity.class.getSimpleName();
-    public static final String EXTRA_ARTICLE_GUID = "EXTRA_ARTICLE_GUID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        String guid = getIntent().getStringExtra(EXTRA_ARTICLE_GUID);
+        String guid = getIntent().getStringExtra(ApplicationConstants.ARTICLE_GUID);
 
         Article article = ((RssReaderApplication)getApplication()).getFeeds().findArticle(guid);
+        getActionBar().setTitle(getIntent().getCharSequenceExtra(ApplicationConstants.FEED_TITLE));
 
         ((TextView)findViewById(R.id.article_title)).setText(article.title);
         ((TextView)findViewById(R.id.article_published)).setText(formatDate(article.published));

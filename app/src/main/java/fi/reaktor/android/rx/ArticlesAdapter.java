@@ -11,15 +11,18 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import fi.reaktor.android.rx.app.ApplicationConstants;
 import fi.reaktor.android.rx.data.Article;
 import fi.reaktor.android.rx.data.Feed;
 
 public class ArticlesAdapter extends BaseAdapter {
 
+    private final String feedName;
     private List<Article> articles;
     private Context context;
 
     public ArticlesAdapter(Feed feed, Context context) {
+        this.feedName = feed.title;
         this.articles= feed.articles.toList();
         this.context = context;
     }
@@ -74,7 +77,8 @@ public class ArticlesAdapter extends BaseAdapter {
                 clickedHolder.teaser.setTypeface(null, Typeface.NORMAL);
 
                 Intent intent = new Intent(context, ArticleActivity.class);
-                intent.putExtra(ArticleActivity.EXTRA_ARTICLE_GUID, article.guid);
+                intent.putExtra(ApplicationConstants.ARTICLE_GUID, article.guid);
+                intent.putExtra(ApplicationConstants.FEED_TITLE, feedName);
                 context.startActivity(intent);
             }
         });

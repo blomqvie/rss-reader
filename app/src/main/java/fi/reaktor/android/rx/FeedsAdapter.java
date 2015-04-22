@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import fi.reaktor.android.rx.app.ApplicationConstants;
 import fi.reaktor.android.rx.data.Feed;
 import fi.reaktor.android.rx.data.Feeds;
 
@@ -56,8 +57,8 @@ public class FeedsAdapter extends BaseAdapter {
         h.unread.setText("0");
         view.setOnClickListener(view1 -> {
             Intent i1 = new Intent(context, FeedActivity.class);
-            i1.putExtra("feed-guid", feed.guid);
-            i1.putExtra("feed-title", feed.title);
+            i1.putExtra(ApplicationConstants.FEED_GUID, feed.guid);
+            i1.putExtra(ApplicationConstants.FEED_TITLE, feed.title);
             context.startActivity(i1);
         });
 
