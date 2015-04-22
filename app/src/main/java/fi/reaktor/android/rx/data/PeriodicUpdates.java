@@ -76,7 +76,7 @@ public class PeriodicUpdates {
                 // remove old feeds
                 List<Feed> feedsToPurge = new ArrayList<>();
                 for (Feed feed : feeds.getFeeds()) {
-                    if (feedUrls.contains(feed.getGuid())) {
+                    if (!feedUrls.contains(feed.getGuid())) {
                         feedsToPurge.add(feed);
                     }
                 }
