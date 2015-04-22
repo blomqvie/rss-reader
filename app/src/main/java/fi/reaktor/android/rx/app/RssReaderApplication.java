@@ -5,22 +5,29 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.googlecode.totallylazy.Sequence;
+
+import java.util.List;
+
+import fi.reaktor.android.rx.data.Feed;
 import fi.reaktor.android.rx.data.FeedUpdatesListener;
 import fi.reaktor.android.rx.data.Feeds;
 import fi.reaktor.android.rx.data.PeriodicUpdates;
+import fi.reaktor.android.rx.data.UserData;
 
 public class RssReaderApplication extends Application implements FeedUpdatesListener {
 
     private PeriodicUpdates periodicUpdates;
     private Feeds feeds;
+    private UserData userData;
 
     @Override
     public void onCreate() {
         Log.d("APPLICATION", "onCreate()");
         super.onCreate();
         feeds = new Feeds();
-        feeds.load(this);
-        periodicUpdates = new PeriodicUpdates(feeds, this);
+        userData = UserData.load(this);
+        periodicUpdates = new PeriodicUpdates(this);
         periodicUpdates.start();
     }
 
@@ -32,29 +39,18 @@ public class RssReaderApplication extends Application implements FeedUpdatesList
     }
 
     @Override
-    public void feedsUpdated() {
+    public void feedsUpdated(List<Feed> feeds) {
+        this.feeds = new Feeds(feeds);
         Intent intent = new Intent("feeds-updated");
         intent.putExtra("updated", true);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
-    public PeriodicUpdates getPeriodicUpdates() {
-        return periodicUpdates;
-    }
-
-    public void setPeriodicUpdates(PeriodicUpdates periodicUpdates) {
-        this.periodicUpdates = periodicUpdates;
     }
 
     public Feeds getFeeds() {
         return feeds;
     }
 
-    public void setFeeds(Feeds feeds) {
-        this.feeds = feeds;
-    }
-
     public void persistDataIfModified() {
-        feeds.persist(this);
+        userData.persist(this);
     }
 }

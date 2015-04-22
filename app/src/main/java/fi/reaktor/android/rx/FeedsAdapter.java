@@ -8,32 +8,34 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import fi.reaktor.android.rx.data.Feed;
 import fi.reaktor.android.rx.data.Feeds;
 
 public class FeedsAdapter extends BaseAdapter {
 
-    private final Feeds feeds;
+    private final List<Feed> feeds;
     private Context context;
 
     public FeedsAdapter(Feeds feeds, Context context) {
-        this.feeds = feeds;
+        this.feeds = feeds.getFeeds();
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return feeds.getFeeds().size();
+        return feeds.size();
     }
 
     @Override
     public Feed getItem(int i) {
-        return feeds.getFeeds().get(i);
+        return feeds.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return getItem(i).getGuid().hashCode();
+        return getItem(i).guid.hashCode();
     }
 
     @Override
@@ -50,12 +52,12 @@ public class FeedsAdapter extends BaseAdapter {
         Feed feed = getItem(i);
 
         Holder h = (Holder) view.getTag();
-        h.title.setText(feed.getTitle());
+        h.title.setText(feed.title);
         h.unread.setText("0");
         view.setOnClickListener(view1 -> {
             Intent i1 = new Intent(context, FeedActivity.class);
-            i1.putExtra("feed-guid", feed.getGuid());
-            i1.putExtra("feed-title", feed.getTitle());
+            i1.putExtra("feed-guid", feed.guid);
+            i1.putExtra("feed-title", feed.title);
             context.startActivity(i1);
         });
 

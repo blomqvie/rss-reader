@@ -22,20 +22,24 @@ public class FeedsActivity extends RssReaderBaseActivity implements ActionBar.On
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            ListView feedsList = (ListView) findViewById(R.id.feeds_list);
-            ((FeedsAdapter) feedsList.getAdapter()).notifyDataSetChanged();
+            setAdapter();
             Log.d(TAG, "FeedsActivity received new data for feeds list");
         }
     };
+
+    private void setAdapter() {
+        ListView feedsList = (ListView) findViewById(R.id.feeds_list);
+        RssReaderApplication app = (RssReaderApplication) getApplication();
+        Feeds feeds = app.getFeeds();
+        feedsList.setAdapter(new FeedsAdapter(feeds, this));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feeds);
 
-        ListView feedsList = (ListView) findViewById(R.id.feeds_list);
-        Feeds feeds = ((RssReaderApplication) getApplication()).getFeeds();
-        feedsList.setAdapter(new FeedsAdapter(feeds, this));
+        setAdapter();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("feeds-updated"));
 

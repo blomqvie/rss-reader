@@ -9,32 +9,34 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import fi.reaktor.android.rx.data.Article;
 import fi.reaktor.android.rx.data.Feed;
 
 public class ArticlesAdapter extends BaseAdapter {
 
-    private Feed feed;
+    private List<Article> articles;
     private Context context;
 
     public ArticlesAdapter(Feed feed, Context context) {
-        this.feed = feed;
+        this.articles= feed.articles.toList();
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return feed.getArticles().size();
+        return articles.size();
     }
 
     @Override
     public Article getItem(int i) {
-        return feed.getArticles().get(i);
+        return articles.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return feed.getArticles().get(i).getGuid().hashCode();
+        return articles.get(i).guid.hashCode();
     }
 
     @Override
@@ -50,25 +52,29 @@ public class ArticlesAdapter extends BaseAdapter {
         Article article = getItem(i);
 
         Holder h = (Holder) view.getTag();
-        h.title.setText(article.getTitle());
-        String content = article.getContent();
+        h.title.setText(article.title);
+        String content = article.content;
         String teaserText = content != null ? (content.length() > 200 ? content.substring(0, 200) : content) : "No content available";
         h.teaser.setText(teaserText);
+        // TODO read user data
+        /*
         if(!article.isRead()) {
             h.teaser.setTypeface(null, Typeface.BOLD);
         } else {
             h.teaser.setTypeface(null, Typeface.NORMAL);
         }
+        */
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                article.setRead(true);
+                // TODO update user data
+                //article.setRead(true);
                 Holder clickedHolder = (Holder) view.getTag();
                 clickedHolder.teaser.setTypeface(null, Typeface.NORMAL);
 
                 Intent intent = new Intent(context, ArticleActivity.class);
-                intent.putExtra(ArticleActivity.EXTRA_ARTICLE_GUID, article.getGuid());
+                intent.putExtra(ArticleActivity.EXTRA_ARTICLE_GUID, article.guid);
                 context.startActivity(intent);
             }
         });

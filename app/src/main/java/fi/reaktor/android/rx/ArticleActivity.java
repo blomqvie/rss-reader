@@ -25,10 +25,10 @@ public class ArticleActivity extends RssReaderBaseActivity {
 
         Article article = ((RssReaderApplication)getApplication()).getFeeds().findArticle(guid);
 
-        ((TextView)findViewById(R.id.article_title)).setText(article.getTitle());
-        ((TextView)findViewById(R.id.article_published)).setText(formatDate(article.getPublished()));
-        ((TextView)findViewById(R.id.article_text)).setText(article.getContent());
-        Log.d(TAG, "Displaying article: " + article.getContent());
+        ((TextView)findViewById(R.id.article_title)).setText(article.title);
+        ((TextView)findViewById(R.id.article_published)).setText(formatDate(article.published));
+        ((TextView)findViewById(R.id.article_text)).setText(article.content);
+        Log.d(TAG, "Displaying article: " + article.content);
     }
 
     private String formatDate(Date date) {

@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.googlecode.totallylazy.Option;
+
 import fi.reaktor.android.rx.app.RssReaderApplication;
 import fi.reaktor.android.rx.data.Feed;
 import fi.reaktor.android.rx.data.Feeds;
@@ -21,7 +23,9 @@ public class FeedActivity extends RssReaderBaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             ListView articleList = (ListView) findViewById(R.id.article_list);
-            ((BaseAdapter) articleList.getAdapter()).notifyDataSetChanged();
+            RssReaderApplication app = (RssReaderApplication) getApplication();
+            Option<Feed> feed = app.getFeeds().getFeedSeq().find(f -> f.guid.equals(getFeedId()));
+            articleList.setAdapter(new ArticlesAdapter(feed.getOrNull(), FeedActivity.this));
         }
     };
 
@@ -35,7 +39,7 @@ public class FeedActivity extends RssReaderBaseActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getIntent().getCharSequenceExtra("feed-title"));
 
-        String feedGuid = getIntent().getStringExtra("feed-guid");
+        String feedGuid = getFeedId();
         findFeed(feedGuid);
         if(feed == null) {
             finish();
@@ -46,10 +50,14 @@ public class FeedActivity extends RssReaderBaseActivity {
         }
     }
 
+    private String getFeedId() {
+        return getIntent().getStringExtra("feed-guid");
+    }
+
     private void findFeed(String feedGuid) {
         Feeds feeds = ((RssReaderApplication) getApplication()).getFeeds();
         for (Feed f : feeds.getFeeds()) {
-            if (f.getGuid().equals(feedGuid)) {
+            if (f.guid.equals(feedGuid)) {
                 feed = f;
                 break;
             }
@@ -67,9 +75,10 @@ public class FeedActivity extends RssReaderBaseActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_feed, menu);
         MenuItem favoriteItem = menu.findItem(R.id.action_favorite);
-        if(feed.isFavorite()) {
-            favoriteItem.setIcon(android.R.drawable.ic_delete);
-        }
+        // TODO read user data
+//        if(feed.isFavorite()) {
+//            favoriteItem.setIcon(android.R.drawable.ic_delete);
+//        }
         return true;
     }
 
@@ -82,8 +91,9 @@ public class FeedActivity extends RssReaderBaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_favorite) {
-            feed.setFavorite(!feed.isFavorite());
-            item.setIcon(feed.isFavorite() ? android.R.drawable.ic_delete : android.R.drawable.ic_input_add);
+            // TODO read user data
+//            feed.setFavorite(!feed.isFavorite());
+//            item.setIcon(feed.isFavorite() ? android.R.drawable.ic_delete : android.R.drawable.ic_input_add);
             return true;
         }
         return super.onOptionsItemSelected(item);

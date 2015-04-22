@@ -2,6 +2,10 @@ package fi.reaktor.android.rx.data;
 
 import android.util.Log;
 
+import com.googlecode.totallylazy.Sequence;
+
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,16 +18,17 @@ import nl.matshofman.saxrssreader.RssFeed;
 import nl.matshofman.saxrssreader.RssItem;
 import nl.matshofman.saxrssreader.RssReader;
 
+import static com.googlecode.totallylazy.Sequences.sequence;
+
 public class PeriodicUpdates {
     private static final String TAG = PeriodicUpdates.class.getSimpleName();
 
     private Timer fetchTimer;
     private TimerTask fetchTimerTask;
-    private Feeds feeds;
+
     private FeedUpdatesListener feedUpdatesListener;
 
-    public PeriodicUpdates(Feeds feeds, FeedUpdatesListener feedUpdatesListener) {
-        this.feeds = feeds;
+    public PeriodicUpdates(FeedUpdatesListener feedUpdatesListener) {
         this.feedUpdatesListener = feedUpdatesListener;
         fetchTimerTask = new TimerTask() {
             @Override
@@ -41,50 +46,10 @@ public class PeriodicUpdates {
                         "http://feeds.arstechnica.com/arstechnica/technology-lab",
                         "http://feeds.arstechnica.com/arstechnica/staff-blogs",
                         "http://feeds.arstechnica.com/arstechnica/features"
-
-                        /*
-                        "http://feeds.reuters.com/reuters/MostRead",
-                        "http://feeds.reuters.com/Reuters/worldNews",
-                        "http://feeds.reuters.com/reuters/technologyNews",
-                        "http://feeds.reuters.com/reuters/scienceNews",
-                        "http://feeds.reuters.com/reuters/sportsNews",
-                        "http://feeds.reuters.com/Reuters/PoliticsNews",
-                        "http://feeds.reuters.com/reuters/businessNews",
-                        "http://feeds.reuters.com/news/wealth",
-                        "http://feeds.reuters.com/reuters/peopleNews",
-                        "http://feeds.reuters.com/reuters/entertainment",
-                        "http://feeds.reuters.com/reuters/environment",
-                        "http://feeds.reuters.com/reuters/lifestyle"
-                        */
                 });
 
-                // add or update new feeds
-                for (String url : feedUrls) {
-                    Log.d(TAG, "Fetching " + url);
-                    Feed feed = fetchRssFeed(url);
-                    if (feed != null) {
-                        if (feed.getGuid() == null) {
-                            feed.setGuid(url);
-                        }
-                        Log.d(TAG, "Adding parsed feed with Guid " + feed.getGuid());
-                        feeds.add(feed);
-                    } else {
-                        Log.w(TAG, "Couldn't parse Feed from " + url);
-                    }
-                }
-
-                // remove old feeds
-                List<Feed> feedsToPurge = new ArrayList<>();
-                for (Feed feed : feeds.getFeeds()) {
-                    if (!feedUrls.contains(feed.getGuid())) {
-                        feedsToPurge.add(feed);
-                    }
-                }
-                for (Feed feed : feedsToPurge) {
-                    feeds.remove(feed);
-                }
-
-                feedUpdatesListener.feedsUpdated();
+                Sequence<Feed> feeds = sequence(feedUrls).map(url -> fetchRssFeed(url));
+                feedUpdatesListener.feedsUpdated(feeds.toList());
             }
         };
     }
@@ -108,8 +73,7 @@ public class PeriodicUpdates {
     private Feed fetchRssFeed(String url) {
         try {
             RssFeed rssFeed = RssReader.read(new URL(url));
-            Feed feed = convertRssFeedIntoFeed(rssFeed);
-            feed.setGuid(url);
+            Feed feed = convertRssFeedIntoFeed(rssFeed, url);
             return feed;
         } catch (Exception e) {
             Log.e(TAG, "Exception fetching feed from " + url, e);
@@ -117,23 +81,9 @@ public class PeriodicUpdates {
         }
     }
 
-    private Feed convertRssFeedIntoFeed(RssFeed rssFeed) {
-        Feed feed = new Feed();
-        feed.setTitle(rssFeed.getTitle());
-        feed.setPublished(new Date(rssFeed.getPublished()));
-        ArrayList<RssItem> rssItems = rssFeed.getRssItems();
-        for (RssItem rssItem : rssItems) {
-            feed.add(convertRssItemIntoArticle(rssItem));
-        }
+    private Feed convertRssFeedIntoFeed(RssFeed rssFeed, String url) {
+        Sequence<Article> articles = sequence(rssFeed.getRssItems()).map(item -> new Article(item.getPubDate(), item.getContent(), item.getTitle(), item.getGuid()));
+        Feed feed = new Feed(url, rssFeed.getTitle(), new Date(rssFeed.getPublished()), articles);
         return feed;
-    }
-
-    private Article convertRssItemIntoArticle(RssItem item) {
-        Article article = new Article();
-        article.setGuid(item.getGuid());
-        article.setTitle(item.getTitle());
-        article.setContent(item.getContent());
-        article.setPublished(item.getPubDate());
-        return article;
     }
 }
