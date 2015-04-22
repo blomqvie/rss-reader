@@ -1,7 +1,6 @@
 package fi.reaktor.android.rx.data;
 
 import android.text.Html;
-import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -23,9 +22,9 @@ public class Article implements Serializable {
     }
 
     private String escapeContent(String content) {
-        String unescapedHtml = content.replaceAll("&nbsp;", " ");
-        String withoutHtmlTags = Jsoup.clean(Html.fromHtml(unescapedHtml).toString(), Whitelist.none());
+        String withoutHtmlTags = Jsoup.clean(Html.fromHtml(content).toString(), Whitelist.none());
         String withoutSpecialChars = withoutHtmlTags.replaceAll("[^ \ta-zA-Z0-9_\\.,\\-\\\\/\\\\:;\\*\\+!?\"'#€%&\\(\\)\\[\\]]", "");
-        return withoutSpecialChars.trim();
+        String unescapedHtml = withoutSpecialChars.replaceAll("&nbsp;", " ");
+        return unescapedHtml.trim();
     }
 }
