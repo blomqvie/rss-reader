@@ -1,11 +1,11 @@
 package fi.reaktor.android.rx.data;
 
 import com.googlecode.totallylazy.Sequence;
+import com.googlecode.totallylazy.Sequences;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 public class Feed implements Serializable {
 
@@ -19,5 +19,9 @@ public class Feed implements Serializable {
         this.title = title;
         this.published = published;
         this.articles = articles;
+    }
+
+    Feed(String guid, String title, Date published, Collection<Article> articles) {
+        this(guid, title, published, Sequences.sequence(articles));
     }
 }
