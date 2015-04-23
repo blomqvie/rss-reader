@@ -10,6 +10,7 @@ import android.widget.ListView;
 import fi.reaktor.android.rssreader.app.RssReaderApplication;
 import fi.reaktor.android.rssreader.data.Feeds;
 import rx.Subscription;
+import rx.android.app.AppObservable;
 import rx.android.content.ContentObservable;
 
 public class FeedsActivity extends RssReaderBaseActivity implements ActionBar.OnNavigationListener {
@@ -38,10 +39,12 @@ public class FeedsActivity extends RssReaderBaseActivity implements ActionBar.On
     protected void onResume() {
         super.onResume();
         setAdapter();
-        broadcasts = ContentObservable.fromLocalBroadcast(this, new IntentFilter("feeds-updated")).subscribe(i -> {
-            setAdapter();
-            Log.d(TAG, "FeedsActivity received new data for feeds list");
-        });
+        broadcasts = AppObservable
+                .bindActivity(this, ContentObservable.fromLocalBroadcast(this, new IntentFilter("feeds-updated")))
+                .subscribe(i -> {
+                    setAdapter();
+                    Log.d(TAG, "FeedsActivity received new data for feeds list");
+                });
     }
 
     @Override

@@ -16,6 +16,7 @@ import fi.reaktor.android.rssreader.app.RssReaderApplication;
 import fi.reaktor.android.rssreader.data.Feed;
 import fi.reaktor.android.rssreader.data.Feeds;
 import rx.Subscription;
+import rx.android.app.AppObservable;
 import rx.android.content.ContentObservable;
 
 public class FeedActivity extends RssReaderBaseActivity {
@@ -52,8 +53,9 @@ public class FeedActivity extends RssReaderBaseActivity {
         }
         ListView articleList = (ListView) findViewById(R.id.article_list);
         articleList.setAdapter(new ArticlesAdapter(feed.get(), this));
-        broadcasts = ContentObservable.fromLocalBroadcast(this, new IntentFilter("feeds-updated"))
-                .map(i -> findFeed(getFeedId()))
+        broadcasts = AppObservable
+                .bindActivity(this, ContentObservable.fromLocalBroadcast(this, new IntentFilter("feeds-updated"))
+                .map(i -> findFeed(getFeedId())))
                 .subscribe(feedOpt -> {
                     Feed f = feedOpt.getOrElse(new Feed("guid", "Placeholder feed", new Date(), Sequences.empty()));
                     articleList.setAdapter(new ArticlesAdapter(f, FeedActivity.this));
