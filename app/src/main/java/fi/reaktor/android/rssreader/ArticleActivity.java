@@ -23,13 +23,16 @@ public class ArticleActivity extends RssReaderBaseActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         String guid = getIntent().getStringExtra(ApplicationConstants.ARTICLE_GUID);
 
-        Article article = ((RssReaderApplication)getApplication()).getFeeds().findArticle(guid);
-        getActionBar().setTitle(getIntent().getCharSequenceExtra(ApplicationConstants.FEED_TITLE));
+        // TODO assumes behaviour subject, use replay or similar
+        ((RssReaderApplication)getApplication()).getFeeds().take(1).subscribe(feeds -> {
+            Article article = feeds.findArticle(guid);
+            getActionBar().setTitle(getIntent().getCharSequenceExtra(ApplicationConstants.FEED_TITLE));
 
-        ((TextView)findViewById(R.id.article_title)).setText(article.title);
-        ((TextView)findViewById(R.id.article_published)).setText(formatDate(article.published));
-        ((TextView)findViewById(R.id.article_text)).setText(article.content);
-        Log.d(TAG, "Displaying article: " + article.content);
+            ((TextView)findViewById(R.id.article_title)).setText(article.title);
+            ((TextView)findViewById(R.id.article_published)).setText(formatDate(article.published));
+            ((TextView)findViewById(R.id.article_text)).setText(article.content);
+            Log.d(TAG, "Displaying article: " + article.content);
+        });
     }
 
     private String formatDate(Date date) {

@@ -1,31 +1,20 @@
 package fi.reaktor.android.rssreader;
 
 import android.app.ActionBar;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import fi.reaktor.android.rssreader.app.RssReaderApplication;
-import fi.reaktor.android.rssreader.data.Feeds;
 import rx.Subscription;
 import rx.android.app.AppObservable;
-import rx.android.content.ContentObservable;
 
 public class FeedsActivity extends RssReaderBaseActivity implements ActionBar.OnNavigationListener {
 
     private static final String TAG = FeedsActivity.class.getSimpleName();
     private static final String[] spinnerOptions = new String[]{"All", "Unread", "Favorites"};
 
-    private Subscription broadcasts;
-
-    private void setAdapter() {
-        ListView feedsList = (ListView) findViewById(R.id.feeds_list);
-        RssReaderApplication app = (RssReaderApplication) getApplication();
-        Feeds feeds = app.getFeeds();
-        feedsList.setAdapter(new FeedsAdapter(feeds, this));
-    }
+    private Subscription feeds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,18 +27,18 @@ public class FeedsActivity extends RssReaderBaseActivity implements ActionBar.On
     @Override
     protected void onResume() {
         super.onResume();
-        setAdapter();
-        broadcasts = AppObservable
-                .bindActivity(this, ContentObservable.fromLocalBroadcast(this, new IntentFilter("feeds-updated")))
-                .subscribe(i -> {
-                    setAdapter();
+        feeds = AppObservable
+                .bindActivity(this, getFeedsObservable())
+                .subscribe(feeds -> {
                     Log.d(TAG, "FeedsActivity received new data for feeds list");
+                    ListView feedsList = (ListView) findViewById(R.id.feeds_list);
+                    feedsList.setAdapter(new FeedsAdapter(feeds, this));
                 });
     }
 
     @Override
     protected void onPause() {
-        broadcasts.unsubscribe();
+        feeds.unsubscribe();
         super.onPause();
     }
 

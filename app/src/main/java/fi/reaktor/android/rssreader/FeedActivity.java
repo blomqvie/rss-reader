@@ -1,27 +1,23 @@
 package fi.reaktor.android.rssreader;
 
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import com.googlecode.totallylazy.Option;
 import com.googlecode.totallylazy.Sequences;
 
 import java.util.Date;
 
 import fi.reaktor.android.rssreader.app.ApplicationConstants;
-import fi.reaktor.android.rssreader.app.RssReaderApplication;
 import fi.reaktor.android.rssreader.data.Feed;
-import fi.reaktor.android.rssreader.data.Feeds;
 import rx.Subscription;
 import rx.android.app.AppObservable;
-import rx.android.content.ContentObservable;
 
 public class FeedActivity extends RssReaderBaseActivity {
 
-    private Subscription broadcasts;
+    private Subscription feeds;
+    private String feedId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,41 +26,25 @@ public class FeedActivity extends RssReaderBaseActivity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getIntent().getCharSequenceExtra(ApplicationConstants.FEED_TITLE));
-    }
-
-    private String getFeedId() {
-        return getIntent().getStringExtra("feed-guid");
-    }
-
-    private Option<Feed> findFeed(String feedGuid) {
-        Feeds feeds = ((RssReaderApplication) getApplication()).getFeeds();
-        return feeds.getFeedSeq().find(f -> f.guid.equals(feedGuid));
+        feedId = getIntent().getStringExtra("feed-guid");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // XXX: this is silly
-        String feedGuid = getFeedId();
-        Option<Feed> feed = findFeed(feedGuid);
-        if (feed.isEmpty()) {
-            finish();
-        }
-        ListView articleList = (ListView) findViewById(R.id.article_list);
-        articleList.setAdapter(new ArticlesAdapter(feed.get(), this));
-        broadcasts = AppObservable
-                .bindActivity(this, ContentObservable.fromLocalBroadcast(this, new IntentFilter("feeds-updated"))
-                .map(i -> findFeed(getFeedId())))
+        feeds = AppObservable
+                .bindActivity(this, getFeedsObservable())
+                .map(feeds -> feeds.getFeedSeq().find(f -> f.guid.equals(feedId)))
                 .subscribe(feedOpt -> {
                     Feed f = feedOpt.getOrElse(new Feed("guid", "Placeholder feed", new Date(), Sequences.empty()));
+                    ListView articleList = (ListView) findViewById(R.id.article_list);
                     articleList.setAdapter(new ArticlesAdapter(f, FeedActivity.this));
                 });
     }
 
     @Override
     protected void onPause() {
-        broadcasts.unsubscribe();
+        feeds.unsubscribe();
         super.onPause();
     }
 

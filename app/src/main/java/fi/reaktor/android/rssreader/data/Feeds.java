@@ -28,6 +28,7 @@ public class Feeds {
     }
 
     public Article findArticle(String guid) {
+        // TODO should return Option
         return getFeedSeq().flatMap(f -> f.articles).find(a -> a.guid.equals(guid)).getOrNull();
     }
 }
