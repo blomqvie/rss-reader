@@ -8,7 +8,7 @@ public abstract class RssReaderBaseActivity extends Activity {
 
     @Override
     protected void onPause() {
-        ((RssReaderApplication)getApplicationContext()).persistDataIfModified();
+        ((RssReaderApplication)getApplication()).persistDataIfModified();
         super.onPause();
     }
 }
