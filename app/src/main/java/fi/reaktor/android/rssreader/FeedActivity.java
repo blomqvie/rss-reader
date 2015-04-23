@@ -1,37 +1,26 @@
 package fi.reaktor.android.rssreader;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.googlecode.totallylazy.Option;
+import com.googlecode.totallylazy.Sequences;
+
+import java.util.Date;
 
 import fi.reaktor.android.rssreader.app.ApplicationConstants;
 import fi.reaktor.android.rssreader.app.RssReaderApplication;
 import fi.reaktor.android.rssreader.data.Feed;
 import fi.reaktor.android.rssreader.data.Feeds;
+import rx.Subscription;
+import rx.android.content.ContentObservable;
 
 public class FeedActivity extends RssReaderBaseActivity {
 
-    // TODO 3: Replace this with RxJava Subscriber
-    BroadcastReceiver feedUpdatesReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ListView articleList = (ListView) findViewById(R.id.article_list);
-            RssReaderApplication app = (RssReaderApplication) getApplication();
-            // TODO 3: you can also map the observable provided by RssReaderApplication
-            Option<Feed> feed = app.getFeeds().getFeedSeq().find(f -> f.guid.equals(getFeedId()));
-            articleList.setAdapter(new ArticlesAdapter(feed.getOrNull(), FeedActivity.this));
-        }
-    };
-
-    private Feed feed;
+    private Subscription broadcasts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,37 +29,41 @@ public class FeedActivity extends RssReaderBaseActivity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getIntent().getCharSequenceExtra(ApplicationConstants.FEED_TITLE));
-
-        String feedGuid = getFeedId();
-        findFeed(feedGuid);
-        if(feed == null) {
-            finish();
-        } else {
-            ListView articleList = (ListView) findViewById(R.id.article_list);
-            articleList.setAdapter(new ArticlesAdapter(feed, this));
-            LocalBroadcastManager.getInstance(this).registerReceiver(feedUpdatesReceiver, new IntentFilter("feeds-updated"));
-        }
     }
 
     private String getFeedId() {
         return getIntent().getStringExtra("feed-guid");
     }
 
-    private void findFeed(String feedGuid) {
+    private Option<Feed> findFeed(String feedGuid) {
         Feeds feeds = ((RssReaderApplication) getApplication()).getFeeds();
-        for (Feed f : feeds.getFeeds()) {
-            if (f.guid.equals(feedGuid)) {
-                feed = f;
-                break;
-            }
-        }
+        return feeds.getFeedSeq().find(f -> f.guid.equals(feedGuid));
     }
 
     @Override
-    protected void onDestroy() {
-        // TODO 3: Change this to unsubscribe in onPause
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(feedUpdatesReceiver);
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
+
+        // XXX: this is silly
+        String feedGuid = getFeedId();
+        Option<Feed> feed = findFeed(feedGuid);
+        if (feed.isEmpty()) {
+            finish();
+        }
+        ListView articleList = (ListView) findViewById(R.id.article_list);
+        articleList.setAdapter(new ArticlesAdapter(feed.get(), this));
+        broadcasts = ContentObservable.fromLocalBroadcast(this, new IntentFilter("feeds-updated"))
+                .map(i -> findFeed(getFeedId()))
+                .subscribe(feedOpt -> {
+                    Feed f = feedOpt.getOrElse(new Feed("guid", "Placeholder feed", new Date(), Sequences.empty()));
+                    articleList.setAdapter(new ArticlesAdapter(f, FeedActivity.this));
+                });
+    }
+
+    @Override
+    protected void onPause() {
+        broadcasts.unsubscribe();
+        super.onPause();
     }
 
     @Override
@@ -93,8 +86,8 @@ public class FeedActivity extends RssReaderBaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_favorite) {
-        // feed.setFavorite(!feed.isFavorite());
-        // item.setIcon(feed.isFavorite() ? android.R.drawable.ic_delete : android.R.drawable.ic_input_add);
+            // feed.setFavorite(!feed.isFavorite());
+            // item.setIcon(feed.isFavorite() ? android.R.drawable.ic_delete : android.R.drawable.ic_input_add);
             return true;
         }
         return super.onOptionsItemSelected(item);
