@@ -1,4 +1,4 @@
-package fi.reaktor.android.rx.data;
+package fi.reaktor.android.rssreader.data;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;

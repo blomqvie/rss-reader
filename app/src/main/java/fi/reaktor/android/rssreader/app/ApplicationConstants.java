@@ -1,4 +1,4 @@
-package fi.reaktor.android.rx.app;
+package fi.reaktor.android.rssreader.app;
 
 public class ApplicationConstants {
     public static final String FEED_GUID = "feed-guid";

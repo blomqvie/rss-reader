@@ -1,6 +1,4 @@
-package fi.reaktor.android.rx.data;
-
-import com.googlecode.totallylazy.Sequence;
+package fi.reaktor.android.rssreader.data;
 
 import java.util.List;
 

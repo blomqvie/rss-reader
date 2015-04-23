@@ -1,4 +1,4 @@
-package fi.reaktor.android.rx;
+package fi.reaktor.android.rssreader;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import fi.reaktor.android.rx.app.ApplicationConstants;
-import fi.reaktor.android.rx.data.Feed;
-import fi.reaktor.android.rx.data.Feeds;
+import fi.reaktor.android.rssreader.app.ApplicationConstants;
+import fi.reaktor.android.rssreader.data.Feed;
+import fi.reaktor.android.rssreader.data.Feeds;
 
 public class FeedsAdapter extends BaseAdapter {
 

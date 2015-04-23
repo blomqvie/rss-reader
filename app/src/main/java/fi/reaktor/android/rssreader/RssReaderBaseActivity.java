@@ -1,8 +1,8 @@
-package fi.reaktor.android.rx;
+package fi.reaktor.android.rssreader;
 
 import android.app.Activity;
 
-import fi.reaktor.android.rx.app.RssReaderApplication;
+import fi.reaktor.android.rssreader.app.RssReaderApplication;
 
 public abstract class RssReaderBaseActivity extends Activity {
 

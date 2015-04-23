@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="fi.reaktor.android.rx" >
+    package="fi.reaktor.android.rssreader" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".app.RssReaderApplication"
+        android:name="fi.reaktor.android.rssreader.app.RssReaderApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".FeedsActivity"
+            android:name="fi.reaktor.android.rssreader.FeedsActivity"
             android:label="@string/title_activity_feeds" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,21 +22,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FeedActivity"
+            android:name="fi.reaktor.android.rssreader.FeedActivity"
             android:label="@string/title_activity_feed"
-            android:parentActivityName=".FeedsActivity"
+            android:parentActivityName="fi.reaktor.android.rssreader.FeedsActivity"
             android:launchMode="singleTop" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="fi.reaktor.android.rx.FeedsActivity" />
+                android:value="fi.reaktor.android.rssreader.FeedsActivity" />
         </activity>
         <activity
-            android:name=".ArticleActivity"
+            android:name="fi.reaktor.android.rssreader.ArticleActivity"
             android:label="@string/title_activity_article"
-            android:parentActivityName=".FeedActivity" >
+            android:parentActivityName="fi.reaktor.android.rssreader.FeedActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="fi.reaktor.android.rx.FeedActivity" />
+                android:value="fi.reaktor.android.rssreader.FeedActivity" />
         </activity>
     </application>
 

@@ -1,14 +1,11 @@
-package fi.reaktor.android.rx.data;
+package fi.reaktor.android.rssreader.data;
 
-import org.junit.Before;
-import org.junit.Test;
+import android.test.AndroidTestCase;
 
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-
-public class FeedsTest {
+public class FeedsTest extends AndroidTestCase {
 
     private final Article articleA2 = article("A2");
     private final Article articleB1 = article("B1");
@@ -16,13 +13,11 @@ public class FeedsTest {
     private final Feed feed2 = new Feed("F2", "Feed 2", new Date(), Arrays.asList(articleB1, article("B2")));
     private Feeds feeds;
 
-    @Before
-    public void setUp() {
+    protected void setUp() {
         feeds = new Feeds(Arrays.asList(feed1, feed2));
     }
 
-    @Test
-    public void findsArticlesByTheirGUID() {
+    public void testFindsArticlesByTheirGUID() {
         assertEquals(feeds.findArticle("B1"), articleB1);
         assertEquals(feeds.findArticle("A2"), articleA2);
     }

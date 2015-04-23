@@ -1,4 +1,4 @@
-package fi.reaktor.android.rx;
+package fi.reaktor.android.rssreader;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,9 +9,9 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import fi.reaktor.android.rx.app.ApplicationConstants;
-import fi.reaktor.android.rx.app.RssReaderApplication;
-import fi.reaktor.android.rx.data.Article;
+import fi.reaktor.android.rssreader.app.ApplicationConstants;
+import fi.reaktor.android.rssreader.app.RssReaderApplication;
+import fi.reaktor.android.rssreader.data.Article;
 
 public class ArticleActivity extends RssReaderBaseActivity {
     private static final String TAG = ArticleActivity.class.getSimpleName();

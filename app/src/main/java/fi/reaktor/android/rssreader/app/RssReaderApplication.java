@@ -1,19 +1,17 @@
-package fi.reaktor.android.rx.app;
+package fi.reaktor.android.rssreader.app;
 
 import android.app.Application;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.googlecode.totallylazy.Sequence;
-
 import java.util.List;
 
-import fi.reaktor.android.rx.data.Feed;
-import fi.reaktor.android.rx.data.FeedUpdatesListener;
-import fi.reaktor.android.rx.data.Feeds;
-import fi.reaktor.android.rx.data.PeriodicUpdates;
-import fi.reaktor.android.rx.data.UserData;
+import fi.reaktor.android.rssreader.data.Feed;
+import fi.reaktor.android.rssreader.data.FeedUpdatesListener;
+import fi.reaktor.android.rssreader.data.Feeds;
+import fi.reaktor.android.rssreader.data.PeriodicUpdates;
+import fi.reaktor.android.rssreader.data.UserData;
 
 public class RssReaderApplication extends Application implements FeedUpdatesListener {
 

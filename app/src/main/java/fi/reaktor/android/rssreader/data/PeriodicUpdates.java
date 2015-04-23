@@ -1,13 +1,10 @@
-package fi.reaktor.android.rx.data;
+package fi.reaktor.android.rssreader.data;
 
 import android.util.Log;
 
 import com.googlecode.totallylazy.Sequence;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +12,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nl.matshofman.saxrssreader.RssFeed;
-import nl.matshofman.saxrssreader.RssItem;
 import nl.matshofman.saxrssreader.RssReader;
 
 import static com.googlecode.totallylazy.Sequences.sequence;
