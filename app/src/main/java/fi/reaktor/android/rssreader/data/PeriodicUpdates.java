@@ -37,14 +37,6 @@ public class PeriodicUpdates {
             "http://feeds.arstechnica.com/arstechnica/features");
 
 
-    // TODO: this class should a static method (e.g. updates()) which returns an Observable emitting Feeds objects.
-
-    // 1. Use interval to create an observable which emits items
-    // 2. It should use IO scheduler
-    // 3. Transform Long emitted by the observable into an observable which emits Feeds
-    // 4. Log errors
-    // 5. Make sure that we retry rss fetching if an error occurs
-
     public static Observable<Feeds> updates() {
         return Observable.timer(0, 30, TimeUnit.SECONDS, Schedulers.io())
                 .map(l -> sequence(feedUrls))
