@@ -10,15 +10,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import nl.matshofman.saxrssreader.RssFeed;
 import nl.matshofman.saxrssreader.RssReader;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import static com.googlecode.totallylazy.Sequences.sequence;
 
 public class PeriodicUpdates {
 
     private static final String TAG = PeriodicUpdates.class.getSimpleName();
+
+    private static List<String> feedUrls = Arrays.asList("http://feeds.arstechnica.com/arstechnica/gadgets",
+            "http://feeds.arstechnica.com/arstechnica/cars",
+            "http://feeds.arstechnica.com/arstechnica/multiverse",
+            "http://feeds.arstechnica.com/arstechnica/science",
+            "http://feeds.arstechnica.com/arstechnica/gaming",
+            "http://feeds.arstechnica.com/arstechnica/apple",
+            "http://feeds.arstechnica.com/arstechnica/tech-policy",
+            "http://feeds.arstechnica.com/arstechnica/security",
+            "http://feeds.arstechnica.com/arstechnica/business",
+            "http://feeds.arstechnica.com/arstechnica/technology-lab",
+            "http://feeds.arstechnica.com/arstechnica/staff-blogs",
+            "http://feeds.arstechnica.com/arstechnica/features");
 
 
     // TODO: this class should a static method (e.g. updates()) which returns an Observable emitting Feeds objects.
@@ -29,57 +45,16 @@ public class PeriodicUpdates {
     // 4. Log errors
     // 5. Make sure that we retry rss fetching if an error occurs
 
-
-    private Timer fetchTimer;
-    private TimerTask fetchTimerTask;
-
-    private FeedUpdatesListener feedUpdatesListener;
-
-    public PeriodicUpdates(FeedUpdatesListener feedUpdatesListener) {
-        this.feedUpdatesListener = feedUpdatesListener;
-        fetchTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                List<String> feedUrls = Arrays.asList(new String[] {
-                        "http://feeds.arstechnica.com/arstechnica/gadgets",
-                        "http://feeds.arstechnica.com/arstechnica/cars",
-                        "http://feeds.arstechnica.com/arstechnica/multiverse",
-                        "http://feeds.arstechnica.com/arstechnica/science",
-                        "http://feeds.arstechnica.com/arstechnica/gaming",
-                        "http://feeds.arstechnica.com/arstechnica/apple",
-                        "http://feeds.arstechnica.com/arstechnica/tech-policy",
-                        "http://feeds.arstechnica.com/arstechnica/security",
-                        "http://feeds.arstechnica.com/arstechnica/business",
-                        "http://feeds.arstechnica.com/arstechnica/technology-lab",
-                        "http://feeds.arstechnica.com/arstechnica/staff-blogs",
-                        "http://feeds.arstechnica.com/arstechnica/features"
-                });
-
-                Sequence<Feed> feeds = sequence(feedUrls).map(url -> fetchRssFeed(url));
-                feedUpdatesListener.feedsUpdated(feeds.toList());
-            }
-        };
+    public static Observable<Feeds> updates() {
+        return Observable.timer(0, 30, TimeUnit.SECONDS, Schedulers.io())
+                .map(l -> sequence(feedUrls))
+                .map(urls -> urls.map(PeriodicUpdates::fetchRssFeed))
+                .map(seq -> new Feeds(seq.toList()))
+                .doOnError(e -> Log.e(TAG, "Error while fetching RSS", e))
+                .retry();
     }
 
-    public void start() {
-        fetchTimer = new Timer("fetchtimer");
-        fetchTimer.scheduleAtFixedRate(fetchTimerTask, 0, 5 * 60 * 1000);
-    }
-
-    public void stop() {
-        try {
-            fetchTimerTask.cancel();
-        } catch (Exception e) {
-        }
-        try {
-            fetchTimer.cancel();
-        } catch (Exception e) {
-        }
-    }
-
-    // TODO: use stuff below
-    
-    private Feed fetchRssFeed(String url) {
+    private static Feed fetchRssFeed(String url) {
         try {
             RssFeed rssFeed = RssReader.read(new URL(url));
             Feed feed = convertRssFeedIntoFeed(rssFeed, url);
@@ -90,7 +65,7 @@ public class PeriodicUpdates {
         }
     }
 
-    private Feed convertRssFeedIntoFeed(RssFeed rssFeed, String url) {
+    private static Feed convertRssFeedIntoFeed(RssFeed rssFeed, String url) {
         Sequence<Article> articles = sequence(rssFeed.getRssItems()).map(item -> new Article(item.getPubDate(), item.getContent(), item.getTitle(), item.getGuid()));
         Feed feed = new Feed(url, rssFeed.getTitle(), new Date(rssFeed.getPublished()), articles);
         return feed;

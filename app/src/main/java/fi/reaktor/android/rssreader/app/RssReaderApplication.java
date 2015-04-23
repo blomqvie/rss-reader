@@ -11,38 +11,35 @@ import fi.reaktor.android.rssreader.data.Feeds;
 import fi.reaktor.android.rssreader.data.PeriodicUpdates;
 import fi.reaktor.android.rssreader.data.UserData;
 import rx.Observable;
+import rx.Subscription;
+import rx.observables.ConnectableObservable;
 import rx.subjects.BehaviorSubject;
 
-public class RssReaderApplication extends Application implements FeedUpdatesListener {
+public class RssReaderApplication extends Application {
 
-    private PeriodicUpdates periodicUpdates;
-    private BehaviorSubject<Feeds> feeds;
     private UserData userData;
+    private ConnectableObservable<Feeds> feeds;
+    private Subscription hotSubscription;
 
     @Override
     public void onCreate() {
         Log.d("APPLICATION", "onCreate()");
         super.onCreate();
-        feeds = BehaviorSubject.create(new Feeds());
+        feeds = PeriodicUpdates.updates().replay(1);
+        hotSubscription = feeds.connect();
         userData = UserData.load(this);
-        periodicUpdates = new PeriodicUpdates(this);
-        periodicUpdates.start();
     }
 
     @Override
     public void onTerminate() {
         Log.d("APPLICATION", "onTerminate()");
-        periodicUpdates.stop();
+        hotSubscription.unsubscribe();
         super.onTerminate();
     }
 
-    @Override
-    public void feedsUpdated(List<Feed> feeds) {
-        this.feeds.onNext(new Feeds(feeds));
-    }
 
     public Observable<Feeds> getFeeds() {
-        return feeds.asObservable();
+        return feeds;
     }
 
     public void persistDataIfModified() {

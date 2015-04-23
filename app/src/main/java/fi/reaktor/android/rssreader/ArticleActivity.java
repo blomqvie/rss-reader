@@ -12,6 +12,7 @@ import java.util.Date;
 import fi.reaktor.android.rssreader.app.ApplicationConstants;
 import fi.reaktor.android.rssreader.app.RssReaderApplication;
 import fi.reaktor.android.rssreader.data.Article;
+import rx.android.app.AppObservable;
 
 public class ArticleActivity extends RssReaderBaseActivity {
     private static final String TAG = ArticleActivity.class.getSimpleName();
@@ -24,13 +25,13 @@ public class ArticleActivity extends RssReaderBaseActivity {
         String guid = getIntent().getStringExtra(ApplicationConstants.ARTICLE_GUID);
 
         // TODO assumes behaviour subject, use replay or similar
-        ((RssReaderApplication)getApplication()).getFeeds().take(1).subscribe(feeds -> {
+        AppObservable.bindActivity(this, ((RssReaderApplication) getApplication()).getFeeds().take(1)).subscribe(feeds -> {
             Article article = feeds.findArticle(guid);
             getActionBar().setTitle(getIntent().getCharSequenceExtra(ApplicationConstants.FEED_TITLE));
 
-            ((TextView)findViewById(R.id.article_title)).setText(article.title);
-            ((TextView)findViewById(R.id.article_published)).setText(formatDate(article.published));
-            ((TextView)findViewById(R.id.article_text)).setText(article.content);
+            ((TextView) findViewById(R.id.article_title)).setText(article.title);
+            ((TextView) findViewById(R.id.article_published)).setText(formatDate(article.published));
+            ((TextView) findViewById(R.id.article_text)).setText(article.content);
             Log.d(TAG, "Displaying article: " + article.content);
         });
     }
