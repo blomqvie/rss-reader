@@ -3,19 +3,16 @@ package fi.reaktor.android.rssreader.app;
 import android.app.Application;
 import android.util.Log;
 
-import java.util.List;
-
-import fi.reaktor.android.rssreader.data.Feed;
-import fi.reaktor.android.rssreader.data.FeedUpdatesListener;
 import fi.reaktor.android.rssreader.data.Feeds;
 import fi.reaktor.android.rssreader.data.PeriodicUpdates;
 import fi.reaktor.android.rssreader.data.UserData;
 import rx.Observable;
 import rx.Subscription;
 import rx.observables.ConnectableObservable;
-import rx.subjects.BehaviorSubject;
 
 public class RssReaderApplication extends Application {
+
+    public static boolean manualUpdates = false;
 
     private UserData userData;
     private ConnectableObservable<Feeds> feeds;
@@ -23,7 +20,7 @@ public class RssReaderApplication extends Application {
 
     @Override
     public void onCreate() {
-        Log.d("APPLICATION", "onCreate()");
+        Log.d("APPLICATION", "onCreate() with static mutable as " + manualUpdates);
         super.onCreate();
         feeds = PeriodicUpdates.updates().replay(1);
         hotSubscription = feeds.connect();
@@ -36,7 +33,6 @@ public class RssReaderApplication extends Application {
         hotSubscription.unsubscribe();
         super.onTerminate();
     }
-
 
     public Observable<Feeds> getFeeds() {
         return feeds;

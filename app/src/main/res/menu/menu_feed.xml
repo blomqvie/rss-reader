@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="fi.reaktor.android.rssreader.FeedActivity">
+    tools:context="fi.reaktor.android.rssreader.activities.FeedActivity">
     <item android:id="@+id/action_favorite" android:icon="@android:drawable/ic_input_add"
         android:title="@string/title_action_favorite"
         android:orderInCategory="1" android:showAsAction="always" />

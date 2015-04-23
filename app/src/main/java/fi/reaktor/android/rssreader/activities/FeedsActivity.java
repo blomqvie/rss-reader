@@ -1,4 +1,4 @@
-package fi.reaktor.android.rssreader;
+package fi.reaktor.android.rssreader.activities;
 
 import android.app.ActionBar;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import fi.reaktor.android.rssreader.R;
 import rx.Subscription;
 import rx.android.app.AppObservable;
 

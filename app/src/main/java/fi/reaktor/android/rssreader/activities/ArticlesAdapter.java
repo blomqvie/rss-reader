@@ -1,4 +1,4 @@
-package fi.reaktor.android.rssreader;
+package fi.reaktor.android.rssreader.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import fi.reaktor.android.rssreader.R;
 import fi.reaktor.android.rssreader.app.ApplicationConstants;
 import fi.reaktor.android.rssreader.data.Article;
 import fi.reaktor.android.rssreader.data.Feed;

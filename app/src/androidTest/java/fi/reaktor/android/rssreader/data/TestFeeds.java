@@ -5,7 +5,7 @@ import android.test.AndroidTestCase;
 import java.util.Arrays;
 import java.util.Date;
 
-public class FeedsTest extends AndroidTestCase {
+public class TestFeeds extends AndroidTestCase {
 
     private final Article articleA2 = article("A2");
     private final Article articleB1 = article("B1");

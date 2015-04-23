@@ -34,6 +34,7 @@ android {
     defaultConfig {
         applicationId 'fi.reaktor.android.rssreader'
         testApplicationId 'fi.reaktor.android.rssreader.tests'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         minSdkVersion 19
         targetSdkVersion 22
         versionName versionProps['name']
@@ -58,7 +59,7 @@ android {
             minifyEnabled false
             shrinkResources false
             zipAlignEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     packagingOptions {
@@ -66,6 +67,7 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'LICENSE.txt'
     }
     productFlavors {
     }
@@ -86,6 +88,6 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.2'
     compile 'org.unbescape:unbescape:1.1.0.RELEASE'
 
-    testCompile 'junit:junit:4.+'  // for the newer Android Studio beta's "regular" tests
-    androidTestCompile 'junit:junit:3.8.2'  // for the stable 1.1 version of Android Studio
+    androidTestCompile 'com.android.support.test:runner:0.2'
+    androidTestCompile 'com.android.support.test:rules:0.2'
 }

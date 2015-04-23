@@ -4,7 +4,7 @@ import android.test.AndroidTestCase;
 
 import java.util.Date;
 
-public class ArticleTest extends AndroidTestCase {
+public class TestArticle extends AndroidTestCase {
 
     public void testContentIsTrimmedFromBeginningAndEnd() {
         Article article = new Article(new Date(), " Much trimming needed around this    \t  ", "", "");

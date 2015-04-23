@@ -1,7 +1,8 @@
-package fi.reaktor.android.rssreader;
+package fi.reaktor.android.rssreader.activities;
 
 import android.app.Activity;
 
+import fi.reaktor.android.rssreader.app.GlobalObservables;
 import fi.reaktor.android.rssreader.app.RssReaderApplication;
 import fi.reaktor.android.rssreader.data.Feeds;
 import rx.Observable;
@@ -15,6 +16,6 @@ public abstract class RssReaderBaseActivity extends Activity {
     }
 
     protected Observable<Feeds> getFeedsObservable() {
-        return ((RssReaderApplication) getApplication()).getFeeds();
+        return GlobalObservables.getInstance().getFeeds();
     }
 }

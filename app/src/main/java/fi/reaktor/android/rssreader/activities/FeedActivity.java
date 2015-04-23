@@ -1,4 +1,4 @@
-package fi.reaktor.android.rssreader;
+package fi.reaktor.android.rssreader.activities;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +9,7 @@ import com.googlecode.totallylazy.Sequences;
 
 import java.util.Date;
 
+import fi.reaktor.android.rssreader.R;
 import fi.reaktor.android.rssreader.app.ApplicationConstants;
 import fi.reaktor.android.rssreader.data.Feed;
 import rx.Subscription;

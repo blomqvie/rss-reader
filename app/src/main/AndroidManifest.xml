@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="fi.reaktor.android.rssreader.FeedsActivity"
+            android:name=".activities.FeedsActivity"
             android:label="@string/title_activity_feeds" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,21 +22,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="fi.reaktor.android.rssreader.FeedActivity"
+            android:name=".activities.FeedActivity"
             android:label="@string/title_activity_feed"
-            android:parentActivityName="fi.reaktor.android.rssreader.FeedsActivity"
+            android:parentActivityName=".activities.FeedsActivity"
             android:launchMode="singleTop" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="fi.reaktor.android.rssreader.FeedsActivity" />
+                android:value=".activities.FeedsActivity" />
         </activity>
         <activity
-            android:name="fi.reaktor.android.rssreader.ArticleActivity"
+            android:name=".activities.ArticleActivity"
             android:label="@string/title_activity_article"
-            android:parentActivityName="fi.reaktor.android.rssreader.FeedActivity" >
+            android:parentActivityName=".activities.FeedActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="fi.reaktor.android.rssreader.FeedActivity" />
+                android:value=".activities.FeedActivity" />
         </activity>
     </application>
 

@@ -19,6 +19,11 @@ public class Article implements Serializable {
         this.guid = guid;
     }
 
+    @Override
+    public String toString() {
+        return "Article<" + guid + ">";
+    }
+
     private String escapeContent(String content) {
         String withoutHtmlTags = Jsoup.clean(content, Whitelist.none());
         String withoutSpecialChars = withoutHtmlTags.replaceAll("[^ \ta-zA-Z0-9_äåöÄÅÖ\\.,\\-\\\\/\\\\:;\\*\\+!?\"'#€%&\\(\\)\\[\\]]", "");
